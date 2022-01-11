@@ -1,0 +1,6 @@
+{
+  "nodeTdd.reporter": "tap",
+  "nodeTdd.buildOnDelete": true,
+  "nodeTdd.buildOnCreate": true,
+  "nodeTdd.glob": "{src,tests}/**.{js,ts,jsx,tsx}"
+}

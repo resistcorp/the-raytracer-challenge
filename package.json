@@ -1,0 +1,12 @@
+{
+  "name": "the-raytracer-challenge",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "type" : "module",
+  "scripts": {
+    "test": "node tests/test.js"
+  },
+  "author": "resistcorp",
+  "license": "MIT"
+}
