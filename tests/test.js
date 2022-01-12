@@ -1,15 +1,10 @@
 import originalAssert from "assert"
 import fs from "fs";
+import Tuples from "../src/tuples.js";
 
-const EPSILON = 1e-5;
 const assert = {
-  epsilonEqual : (actual, expected, msg) => originalAssert.ok(Math.abs(expected - actual) < EPSILON, msg),
-  tupleEqual : (actual, expected, msg) => {
-    assert.epsilonEqual(actual.x, expected.x, "x");
-    assert.epsilonEqual(actual.y, expected.y, "y");
-    assert.epsilonEqual(actual.z, expected.z, "z");
-    assert.epsilonEqual(actual.w, expected.w, "w");
-  },
+  epsilonEqual : (actual, expected, msg) => originalAssert.ok(Tuples.epsilonEquals(actual, expected), msg),
+  tupleEqual: (actual, expected, msg) => originalAssert.ok(Tuples.tuplesEquivalent(actual, expected), msg),
   ...originalAssert
 }
 let ALL_TESTS = [];
@@ -28,6 +23,7 @@ function runAllTests(tests){
     }
   });
 }
+
 global.test = test;
 let files = fs.readdirSync("./tests").filter(fileName => fileName.endsWith(".test.js"));
 for(let file of files){
