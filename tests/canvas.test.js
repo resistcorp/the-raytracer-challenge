@@ -1,5 +1,6 @@
 import Tuples from "../src/tuples.js";
 import Canvas from "../src/canvas.js";
+import { test } from "./test.js"
 
 test("a color is a (red, green, blue) tuple", assert => {
   let aColor = Canvas.makeColor(-0.5, 0.4, 1.7);

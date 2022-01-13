@@ -5,7 +5,7 @@
   "main": "index.js",
   "type" : "module",
   "scripts": {
-    "test": "node tests/test.js"
+    "test": "node tests/allTests.js"
   },
   "author": "resistcorp",
   "license": "MIT"
