@@ -1,7 +1,5 @@
-//import { test } from "./test.js";
 import Tuples from "../src/tuples.js";
 
-console.log("added all tuple tests");
 test("a tuple with a w of 1.0 is a point and not a vector", assert => {
   let aPoint = Tuples.makeTuple(4.3, -4.2, 3.1, 1.0);
   assert.ok(Tuples.isPoint(aPoint));

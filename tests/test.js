@@ -13,7 +13,7 @@ export function test(msg, code){
 }
 
 function runAllTests(tests){
-  console.log("1.." + tests.length);
+  //TODO: later console.log("TAP version 13");
   tests.forEach(({ code, msg }, index) => {
     try {
       code(assert);
@@ -22,6 +22,7 @@ function runAllTests(tests){
       console.log(`not ok ❌ ${index + 1 } - ${msg} : ${error}`);
     }
   });
+  console.log("1.." + tests.length);
 }
 
 global.test = test;

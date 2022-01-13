@@ -1,4 +1,3 @@
-
 const EPSILON = 1e-5;
 const Tuples = { 
   // factories
@@ -21,6 +20,7 @@ const Tuples = {
     //FIXME: we may want to throw if subtracting a point a vector
     return Tuples.makeTuple(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
   },
+
   negate : function(tuple) {
     return Tuples.makeTuple(-tuple.x, -tuple.y, -tuple.z, -tuple.w);
   },
@@ -40,7 +40,7 @@ const Tuples = {
   cross : function(a, b) {
     return Tuples.makeVector(
       a.y * b.z - a.z * b.y,
-      a.z * b.x - a.x * b.z ,
+      a.z * b.x - a.x * b.z,
       a.x * b.y - a.y * b.x,
     );
   },
@@ -69,4 +69,5 @@ const Tuples = {
     return Tuples.epsilonEquals(a.x, b.x) && Tuples.epsilonEquals(a.y, b.y) && Tuples.epsilonEquals(a.z, b.z) && Tuples.epsilonEquals(a.w, b.w);
   }
 }
+
 export default Tuples;
