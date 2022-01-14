@@ -6,11 +6,11 @@ import fs from 'fs';
 function main(){
   let projectile = {
     position : Tuples.makePoint(0,0,0),
-    velocity : Tuples.makeVector(5.5,10,0),
+    velocity : Tuples.makeVector(10,10,0),
   };
   let environment = {
     gravity : Tuples.makeVector(0,-0.15,0),
-    wind : Tuples.makeVector(-0.01, 0, 0),
+    wind : Tuples.makeVector(-0.05, 0, 0),
   };
   console.log(projectile);
   let turns = 0;
@@ -21,7 +21,7 @@ function main(){
     console.log(projectile);
     let {x, y} = projectile.position;
     maxY = Math.max(maxY, y);
-    Canvas.writePixel(cnv, x|0, y|0, Tuples.makeColor(1.0, 0.0, 0.0));
+    Canvas.writePixel(cnv, x|0, 350-y|0, Canvas.makeColor(1.0, 0.0, 0.0));
     turns++;
   }
   let ppm = Canvas.toPPM(cnv);

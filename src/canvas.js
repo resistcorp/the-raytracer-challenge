@@ -17,13 +17,16 @@ const Canvas = {
     Object.assign(ret, { width, height });
     return ret;
   },
+  rangeCheck: function (cnv, x, y) {
+    return x >= 0 && x < cnv.width && y >= 0 && y < cnv.height;
+  },
   writePixel: function (cnv, x, y, color) {
-    let width = cnv.width;
-    cnv[x + y * width] = Canvas.makeColor(color.r, color.g, color.b);
+    if( Canvas.rangeCheck(cnv, x, y))
+      cnv[x + y * cnv.width] = Canvas.makeColor(color.r, color.g, color.b);
   },
   pixelAt: function (cnv, x, y) {
-    let width = cnv.width;
-    return cnv[x + y * width];
+    if( Canvas.rangeCheck(cnv, x, y))
+      return cnv[x + y * cnv.width];
   },
   colorToPPM: function (color) {
     return [color.red, color.green, color.blue].map(val => "" + Math.round(0.49 + 255 * clamp(val, 0, 1)));
