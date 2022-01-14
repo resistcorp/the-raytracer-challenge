@@ -11,8 +11,8 @@ I need to train :
 - my teaching/presentation skills
 
 ## how
-JS (+ maybe some wasm optims in the future ?)
-NO library, as few modules as possible (fs mainly)
-TDD (of course)
+- JS (+ maybe some wasm optims in the future ?)
+- NO library, as few modules as possible (fs mainly)
+- TDD (of course)
 
 I'll try to make it one chapter = one vid
