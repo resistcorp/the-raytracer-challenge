@@ -7,3 +7,5 @@
 [ ] replace assertion module
 [ ] do chapters 3..16 of the book
 [ ] add hierarchical tests
+[ ] add HTTP server with routing
+[ ] find a simple binding system for guis
