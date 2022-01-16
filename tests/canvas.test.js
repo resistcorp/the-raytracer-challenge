@@ -9,9 +9,19 @@ test("a color is a (red, green, blue) tuple", assert => {
   assert.epsilonEqual(aColor.b, 1.7);
   assert.epsilonEqual(aColor.a, 0.0);
   assert.equal(aColor.r, aColor.red);
+  assert.equal(aColor.r, aColor.x);
   assert.equal(aColor.g, aColor.green);
   assert.equal(aColor.b, aColor.blue);
   assert.equal(aColor.a, aColor.alpha);
+});
+test("mutating a color", assert => {
+  let aColor = Canvas.makeColor(0.0,0.0,0.0);
+  aColor.r = 1.0;
+  aColor.g = -1.7;
+  aColor.b = 0.5;
+  assert.equal(aColor.r, 1.0);
+  assert.equal(aColor.g,-1.7);
+  assert.equal(aColor.b, 0.5);
 });
 test("adding colors", assert => {
   let c1 = Canvas.makeColor(0.9, 0.6, 0.75);

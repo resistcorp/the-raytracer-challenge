@@ -1,0 +1,22 @@
+<html>
+<head>
+  <title>The Raytracer Challenge -- chaps 1-2</title>
+</head>
+<body>
+  <canvas id="cnv" width="500" height="500"></canvas>
+  <form>
+    <label for="width">width<input name="width" id="width" type="number" step="1" max="1000" min="10" value="700" /></label>
+    <label for="height">height<input name="height" id="height" type="number" step="1" max="1000" min="10" value="350" /></label>
+    <label for="velX">velocity x<input name="velX" id="velX" type="number" step="0.01" max="20" min="0" value="10" /></label>
+    <label for="velY">velocity y<input name="velY" id="velY" type="number" step="0.01" max="10" min="0" value="10" /></label>
+    <label for="wind">wind<input name="wind" id="wind" type="number" step="0.01" max="1" min="-1" value="-0.12" /></label>
+    <label for="gravity">gravity -<input name="gravity" id="gravity" type="number" step="0.1" max="1" min="0" value="0.15" /></label>
+  </form>
+  <script type="module">
+    import {play} from "./chapter1and2.js";
+    window.draw = play;
+    play();
+  </script>
+  <button onclick="draw()">Draw</button>
+</body>
+</html>

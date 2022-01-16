@@ -2,7 +2,7 @@ import Tuples from "./tuples.js";
 import {clamp} from "./lib.js"
 
 const Canvas = {
-  makeColor: function (r, g, b, a = 0.0) {
+  makeColor: function (r, g, b, a = 1.0) {
     return new Proxy(Tuples.makeTuple(r, g, b, a), colorHandler);
   },
   mult: function (a, b) {
@@ -27,6 +27,18 @@ const Canvas = {
   pixelAt: function (cnv, x, y) {
     if( Canvas.rangeCheck(cnv, x, y))
       return cnv[x + y * cnv.width];
+  },
+  populateImageData: function (cnv, imageData) {
+    cnv.forEach((color, i) => {
+      let channels = Canvas.colorToBytes(color);
+      imageData[4*i + 0] = channels[0];
+      imageData[4*i + 1] = channels[1];
+      imageData[4*i + 2] = channels[2];
+      imageData[4*i + 3] = channels[3];
+    });;
+  },
+  colorToBytes: function (color) {
+    return [color.red, color.green, color.blue, color.alpha].map(val => Math.round(0.49 + 255 * clamp(val, 0, 1)));
   },
   colorToPPM: function (color) {
     return [color.red, color.green, color.blue].map(val => "" + Math.round(0.49 + 255 * clamp(val, 0, 1)));
@@ -56,7 +68,7 @@ const Canvas = {
   }
 };
 
-function colorToVec(obj, prop) {
+function colorToVecGet(obj, prop) {
   // TODO: check performance?
   /*
   return obj[{ r: "x", g: "y", b: "z" }[prop]];
@@ -74,11 +86,29 @@ function colorToVec(obj, prop) {
     case 'alpha':
     case 'a':
       return obj.w;
-    default: return obj[prop]
+    default: return obj[prop];
   }
   //*/
 }
+function colorToVecSet(obj, prop, value) {
+  switch (prop) {
+    case 'red':
+    case 'r':
+      return obj.x = value;
+    case 'green':
+    case 'g':
+      return obj.y = value;
+    case 'blue':
+    case 'b':
+      return obj.z = value;
+    case 'alpha':
+    case 'a':
+      return obj.w = value;
+    default: return obj[prop] = value;
+  }
+}
 const colorHandler = {
-  get: colorToVec
+  get: colorToVecGet,
+  set: colorToVecSet
 }
 export default Canvas;
