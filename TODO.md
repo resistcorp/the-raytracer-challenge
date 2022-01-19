@@ -9,5 +9,5 @@
 [ ] run tests in browser too
 [ ] do chapters 3..16 of the book
 [ ] add hierarchical tests
-[ ] add routing and shutdown to server
+[ ] add routing, hot-reload and shutdown to server
 [ ] find a simple binding system for guis

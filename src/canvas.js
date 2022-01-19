@@ -2,7 +2,7 @@ import Tuples from "./tuples.js";
 import {clamp} from "./lib.js"
 
 const Canvas = {
-  makeColor: function (r, g, b, a = 1.0) {
+  makeColor: function (r, g, b, a = 0.0) {
     return new Proxy(Tuples.makeTuple(r, g, b, a), colorHandler);
   },
   mult: function (a, b) {
@@ -28,14 +28,15 @@ const Canvas = {
     if( Canvas.rangeCheck(cnv, x, y))
       return cnv[x + y * cnv.width];
   },
-  populateImageData: function (cnv, imageData) {
+  populateImageData: function (cnv, imageData, blendfunc = (src, dest) => 255) {
+    //TODO:  blend modes
     cnv.forEach((color, i) => {
       let channels = Canvas.colorToBytes(color);
       imageData[4*i + 0] = channels[0];
       imageData[4*i + 1] = channels[1];
       imageData[4*i + 2] = channels[2];
-      imageData[4*i + 3] = channels[3];
-    });;
+      imageData[4 * i + 3] = blendfunc(channels[3], imageData[4 * i + 3]) ;
+    });
   },
   colorToBytes: function (color) {
     return [color.red, color.green, color.blue, color.alpha].map(val => Math.round(0.49 + 255 * clamp(val, 0, 1)));
