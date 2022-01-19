@@ -1,4 +1,4 @@
-const EPSILON = 1e-5;
+import { epsilonEquals } from "./lib.js";
 const Tuples = { 
   // factories
   makeTuple : function(x, y, z, w) {
@@ -62,11 +62,8 @@ const Tuples = {
   isVector : function(tuple) {
     return tuple.w == 0.0;
   },
-  epsilonEquals : function(a, b) {
-    return Math.abs(a - b) < EPSILON;
-  },
-  tuplesEquivalent : function(a, b) {
-    return Tuples.epsilonEquals(a.x, b.x) && Tuples.epsilonEquals(a.y, b.y) && Tuples.epsilonEquals(a.z, b.z) && Tuples.epsilonEquals(a.w, b.w);
+  equivalent : function(a, b) {
+    return epsilonEquals(a.x, b.x) && epsilonEquals(a.y, b.y) && epsilonEquals(a.z, b.z) && epsilonEquals(a.w, b.w);
   }
 }
 
