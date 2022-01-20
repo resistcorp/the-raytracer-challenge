@@ -13,3 +13,4 @@
 [ ] add hierarchical tests
 [ ] add routing, hot-reload and shutdown to server
 [ ] find a simple binding system for guis
+[ ] add ignoring tests / TODOS

@@ -1,11 +1,36 @@
 import {epsilonEquals} from  "../src/lib.js";
+import Tuples from  "../src/tuples.js";
+const {dot, makeTuple} = Tuples;
 
 function makeMatrix(cols, rows, values){
-  //TODO: check that values are cols*rows floats
-  let data = new Float32Array(values);
-  let ret = Object.create(MatrixPrototype);
-  return Object.assign(ret, {data, cols, rows});
+  if(values.length != cols * rows)
+    console.warn("invalid matrix size");
+  if(values.some(v => isNaN(v)))
+    console.warn("invalid matrix value");
+  let data = new Float64Array(values);
 
+  let ret = Object.create(MatrixPrototype);
+  return Object.assign(ret, {data, cols, rows, determinant : getDetMethod(cols, rows)});
+}
+
+//TODO: maybe roll these 3 methods back into matrix prototype
+function getDetMethod(cols, rows){
+  if(rows == 2 && cols == 2)
+    return det2x2;
+  return undefDeterminant;
+}
+
+function undefDeterminant(){
+  let sum = 0;
+  for (let col = 0; col < this.cols; ++col){
+    sum += this.data[col] * this.cofactor(0, col);
+  }
+  return sum;
+}
+
+function det2x2() {
+  let [a, b, c, d] = this.data;
+  return a * d - c * b;
 }
 
 export function M2x2(...values) {
@@ -38,6 +63,20 @@ const MatrixPrototype = {
   set : function (row, col, val){
     this.data[row * this.cols + col] = val;
   },
+  computeColumns : function (){
+    let ret = [];
+    for(let i = 0; i < this.cols; ++i){
+      ret.push(this.col(i));
+    }
+    return ret;
+  },
+  computeRows : function (){
+    let ret = [];
+    for(let i = 0; i < this.rows; ++i){
+      ret.push(this.row(i));
+    }
+    return ret;
+  },
   row : function (row){
     let ret = [];
     //TODO: this is just a slice op
@@ -52,11 +91,47 @@ const MatrixPrototype = {
       ret.push(this.get(row, col));
     return ret;
   },
+  
+  invertible : function (){
+    return this.determinant() !== 0;
+  },
+  
+  inversed : function (){
+    if(!this.invertible()){
+      console.console.warn("tried to invert non-invertible matrix");
+      return undefined
+    }
+    let inv = makeMatrix(this.rows, this.cols, this.data.map(v => 0.0));
+    let determinant = this.determinant();
+
+    for(let col = 0; col < this.cols; ++col){
+      for(let row = 0; row < this.rows; ++row){
+        //inverse row and col to transpose
+        inv.set(row, col, this.cofactor(col, row) / determinant);
+      }
+    }
+    return inv;
+  },
+  
+  transposed : function (){
+    let {rows, cols} = this;
+    if(rows !== cols){
+      console.warn(`tried to transpose non-square matrix : ${cols}x${rows}`)
+      return undefined;
+    }
+    let values = [];
+    for(let col = 0; col < cols; ++col)
+      values.push(...this.col(col));
+    return makeMatrix(cols, rows, values);
+  },
+
   mul : function (b){
     let a = this;
     let values = [];
-    if(b.rows != a.cols)
+    if(b.rows !== a.cols){
+      console.warn(`tried to multiply incompatible matrices : ${a.cols}x${a.rows} vs. ${b.cols}x${b.rows}`)
       return undefined;
+    }
     for(let row = 0; row < b.rows; ++row){
       let rowA = a.row(row);
       for(let col = 0; col < b.cols; ++col){
@@ -66,5 +141,37 @@ const MatrixPrototype = {
       }
     }
     return makeMatrix(b.cols, b.rows, values);
+  },
+
+  minor : function(i, j){
+    return this.subMatrix(i, j).determinant();
+  },
+
+  cofactor : function(i, j){
+    //TODO: this works for 3x3, no idea if it extends to other sizes
+    let minor = this.minor(i, j);
+    if( (i+j) % 2 == 1 )
+      return -minor;
+    return minor;
+  },
+
+  subMatrix : function(rowToRemove, colToRemove){
+    let values = [];
+    this.computeRows().forEach((row, rowI) => {
+      if(rowI !== rowToRemove){
+        values.push(...row.filter((v, colI)=>colI != colToRemove))
+      }
+    });
+    return makeMatrix(this.cols-1, this.rows-1, values);
   }
 };
+
+//TODO: this is very inefficient. replace when tuples are M1x4
+export function transform(tuple, matrix4x4) {
+  return makeTuple(
+    dot(tuple, makeTuple(...matrix4x4.row(0))),
+    dot(tuple, makeTuple(...matrix4x4.row(1))),
+    dot(tuple, makeTuple(...matrix4x4.row(2))),
+    dot(tuple, makeTuple(...matrix4x4.row(3)))
+  );
+}
