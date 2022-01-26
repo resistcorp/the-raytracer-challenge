@@ -1,34 +1,34 @@
 import { epsilonEquals } from "./lib.js";
 const Tuples = { 
   // factories
-  makeTuple : function(x, y, z, w) {
+  tuple : function(x, y, z, w) {
     return { x, y, z, w };
   },
-  makePoint : function(x, y, z) {
+  point : function(x, y, z) {
     return { x, y, z, w: 1.0 };
   },
-  makeVector : function(x, y, z) {
+  vector : function(x, y, z) {
     return { x, y, z, w: 0.0 };
   },
 
   //maths on tuples
   add : function(a, b) {
     //FIXME: we may want to throw if adding two points
-    return Tuples.makeTuple(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
+    return Tuples.tuple(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
   },
   sub : function(a, b) {
     //FIXME: we may want to throw if subtracting a point a vector
-    return Tuples.makeTuple(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
+    return Tuples.tuple(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
   },
 
   negate : function(tuple) {
-    return Tuples.makeTuple(-tuple.x, -tuple.y, -tuple.z, -tuple.w);
+    return Tuples.tuple(-tuple.x, -tuple.y, -tuple.z, -tuple.w);
   },
   scale : function(tuple, scalar) {
-    return Tuples.makeTuple(scalar * tuple.x, scalar * tuple.y, scalar * tuple.z, scalar * tuple.w);
+    return Tuples.tuple(scalar * tuple.x, scalar * tuple.y, scalar * tuple.z, scalar * tuple.w);
   },
   divide : function(tuple, scalar) {
-    return Tuples.makeTuple(tuple.x / scalar, tuple.y / scalar, tuple.z / scalar, tuple.w / scalar);
+    return Tuples.tuple(tuple.x / scalar, tuple.y / scalar, tuple.z / scalar, tuple.w / scalar);
   },
   
   dot : function(a, b) {
@@ -38,7 +38,7 @@ const Tuples = {
          + a.w * b.w;
   },
   cross : function(a, b) {
-    return Tuples.makeVector(
+    return Tuples.vector(
       a.y * b.z - a.z * b.y,
       a.z * b.x - a.x * b.z,
       a.x * b.y - a.y * b.x,

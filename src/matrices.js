@@ -1,6 +1,6 @@
 import {epsilonEquals} from  "../src/lib.js";
 import Tuples from  "../src/tuples.js";
-const {dot, makeTuple} = Tuples;
+const {dot, tuple} = Tuples;
 
 function makeMatrix(cols, rows, values){
   if(values.length != cols * rows)
@@ -10,7 +10,10 @@ function makeMatrix(cols, rows, values){
   let data = new Float64Array(values);
 
   let ret = Object.create(MatrixPrototype);
-  return Object.assign(ret, {data, cols, rows, determinant : getDetMethod(cols, rows)});
+  let properties = { data, cols, rows, determinant: getDetMethod(cols, rows) };
+  if(cols === 4 && rows === 4)
+    properties.transform = t => transform(t, ret);
+  return Object.assign(ret, properties);
 }
 
 //TODO: maybe roll these 3 methods back into matrix prototype
@@ -36,11 +39,81 @@ function det2x2() {
 export function M2x2(...values) {
   return makeMatrix(2, 2, values);
 }
+M2x2.identity = () => M2x2(
+    1.0, 0.0,
+    0.0, 1.0,
+  );
 export function M3x3(...values) {
   return makeMatrix(3, 3, values);
 }
+M3x3.identity = () => M3x3(
+    1.0, 0.0, 0.0,
+    0.0, 1.0, 0.0,
+    0.0, 0.0, 1.0,
+  );
 export function M4x4(...values) {
   return makeMatrix(4, 4, values);
+}
+M4x4.identity = () => M4x4(
+    1.0, 0.0, 0.0, 0.0,
+    0.0, 1.0, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.0, 0.0, 0.0, 1.0,
+  );
+
+export function translation(x, y, z){
+  return M4x4(
+    1, 0, 0, x,
+    0, 1, 0, y,
+    0, 0, 1, z,
+    0, 0, 0, 1,
+  );
+}
+export function scaling(x, y, z){
+  return M4x4(
+    x, 0, 0, 0,
+    0, y, 0, 0,
+    0, 0, z, 0,
+    0, 0, 0, 1,
+  );
+}
+export function rotation_x(angle_in_radians){
+  let s = Math.sin(angle_in_radians);
+  let c = Math.cos(angle_in_radians);
+  return M4x4(
+    1, 0, 0, 0,
+    0, c,-s, 0,
+    0, s, c, 0,
+    0, 0, 0, 1,
+  );
+}
+export function rotation_y(angle_in_radians){
+  let s = Math.sin(angle_in_radians);
+  let c = Math.cos(angle_in_radians);
+  return M4x4(
+    c, 0, s, 0,
+    0, 1, 0, 0,
+   -s, 0, c, 0,
+    0, 0, 0, 1,
+  );
+}
+export function rotation_z(angle_in_radians){
+  let s = Math.sin(angle_in_radians);
+  let c = Math.cos(angle_in_radians);
+  return M4x4(
+    c,-s, 0, 0,
+    s, c, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1,
+  );
+}
+export function shearing(xtoy, xtoz, ytox, ytoz, ztox, ztoy){
+  return M4x4(
+    1.0,xtoy,xtoz, 0.0,
+    ytox,1.0,ytoz, 0.0,
+    ztox,ztoy,1.0, 0.0,
+    0.0, 0.0, 0.0, 1.0,
+  );
 }
 
 export function matricesEqual(a, b){
@@ -167,11 +240,11 @@ const MatrixPrototype = {
 };
 
 //TODO: this is very inefficient. replace when tuples are M1x4
-export function transform(tuple, matrix4x4) {
-  return makeTuple(
-    dot(tuple, makeTuple(...matrix4x4.row(0))),
-    dot(tuple, makeTuple(...matrix4x4.row(1))),
-    dot(tuple, makeTuple(...matrix4x4.row(2))),
-    dot(tuple, makeTuple(...matrix4x4.row(3)))
+export function transform(t, matrix4x4) {
+  return tuple(
+    dot(t, tuple(...matrix4x4.row(0))),
+    dot(t, tuple(...matrix4x4.row(1))),
+    dot(t, tuple(...matrix4x4.row(2))),
+    dot(t, tuple(...matrix4x4.row(3)))
   );
 }

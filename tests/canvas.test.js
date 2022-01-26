@@ -61,6 +61,14 @@ test("creating a canvas", assert =>{
     assert.tupleEqual(pixel, black);
   }
 });
+test("addressing a canvas", assert =>{
+  let cnv = Canvas.create(10, 20);
+  assert.equal(cnv.width, 10)
+  assert.equal(cnv.height, 20)
+  const black = Canvas.makeColor(0.0, 0.0, 0.0);
+  assert.tupleEqual(Canvas.pixelAt(cnv, 9, 9), black);
+  assert.tupleEqual(Canvas.pixelAt(cnv, 9.5, 9.5), black);
+});
 test("constructing a ppm header", assert =>{
   let cnv = Canvas.create(5, 3);
   let ppm = Canvas.toPPM(cnv);

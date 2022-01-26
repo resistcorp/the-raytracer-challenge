@@ -2,5 +2,7 @@
   "nodeTdd.reporter": "tap",
   "nodeTdd.buildOnDelete": true,
   "nodeTdd.buildOnCreate": true,
-  "nodeTdd.glob": "{src,tests}/**.{js,ts,jsx,tsx}"
+  "nodeTdd.glob": "{src,tests}/**.{js,ts,jsx,tsx}",
+  "editor.autoIndent": "advanced",
+  "editor.acceptSuggestionOnCommitCharacter": false
 }

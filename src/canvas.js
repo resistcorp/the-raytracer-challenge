@@ -3,7 +3,7 @@ import {clamp} from "./lib.js"
 
 const Canvas = {
   makeColor: function (r, g, b, a = 0.0) {
-    return new Proxy(Tuples.makeTuple(r, g, b, a), colorHandler);
+    return new Proxy(Tuples.tuple(r, g, b, a), colorHandler);
   },
   mult: function (a, b) {
     //FIXME: only makes sense for colors
@@ -18,15 +18,21 @@ const Canvas = {
     return ret;
   },
   rangeCheck: function (cnv, x, y) {
-    return x >= 0 && x < cnv.width && y >= 0 && y < cnv.height;
+    x = x | 0;//floor
+    y = y | 0;//floor
+    if( x >= 0 && x < cnv.width && y >= 0 && y < cnv.height )
+      return x + y * cnv.width
+    return -1;
   },
   writePixel: function (cnv, x, y, color) {
-    if( Canvas.rangeCheck(cnv, x, y))
-      cnv[x + y * cnv.width] = Canvas.makeColor(color.r, color.g, color.b);
+    let idx = Canvas.rangeCheck(cnv, x, y);
+    if( idx !== -1 )
+      cnv[idx] = Canvas.makeColor(color.r, color.g, color.b);
   },
   pixelAt: function (cnv, x, y) {
-    if( Canvas.rangeCheck(cnv, x, y))
-      return cnv[x + y * cnv.width];
+    let idx = Canvas.rangeCheck(cnv, x, y);
+    if( idx !== -1 )
+      return cnv[idx];
   },
   populateImageData: function (cnv, imageData, blendfunc = (src, dest) => 255) {
     //TODO:  blend modes

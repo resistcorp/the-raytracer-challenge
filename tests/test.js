@@ -15,3 +15,5 @@ export function runAllTests(assert, tests = ALL_TESTS) {
   });
   console.log("1.." + tests.length);
 }
+
+export default test;

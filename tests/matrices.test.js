@@ -1,7 +1,7 @@
 import {test} from "./test.js";
 import {M4x4, M3x3, M2x2, matricesEqual, transform} from "../src/matrices.js";
 import Tuples from "../src/tuples.js";
-const {makeTuple, equivalent : tuplesEqual} = Tuples;
+const {tuple, equivalent : tuplesEqual} = Tuples;
 
 test("creating and inspecting 4x4 mtx", assert => {
   let mtx = M4x4(
@@ -85,9 +85,9 @@ test("A matrix multiplied by a tuple", assert => {
     8, 6, 4, 1,
     0, 0, 0, 1
   );
-  let tuple = makeTuple(1, 2, 3, 1);
-  let expected = makeTuple(18, 24, 33, 1);
-  const actual = transform(tuple, mtx);
+  let t = tuple(1, 2, 3, 1);
+  let expected = tuple(18, 24, 33, 1);
+  const actual = transform(t, mtx);
   assert.ok(tuplesEqual(actual, expected));
 });
 
@@ -98,12 +98,7 @@ test("multiplying by the identity matrix", assert => {
     9, 8, 7, 6,
     5, 4, 3, 2
   );
-  let identity = M4x4(
-    1.0, 0.0, 0.0, 0.0,
-    0.0, 1.0, 0.0, 0.0,
-    0.0, 0.0, 1.0, 0.0,
-    0.0, 0.0, 0.0, 1.0,
-  );
+  let identity = M4x4.identity();
   assert.ok(matricesEqual(mtxA.mul(identity), mtxA));
   assert.ok(matricesEqual(identity.mul(mtxA), mtxA));
 });
@@ -264,14 +259,9 @@ test("multiplying a product by its inverse", assert => {
 
 // exercises
 test("inverting identity", assert=>{
-  let identity = M4x4(
-    1.0, 0.0, 0.0, 0.0,
-    0.0, 1.0, 0.0, 0.0,
-    0.0, 0.0, 1.0, 0.0,
-    0.0, 0.0, 0.0, 1.0,
-  );
+  let identity = M4x4.identity();
   assert.ok(matricesEqual(identity, identity.inversed()));
-})
+});
 test("multiplying a matrix by its inverse", assert=>{
   let B = M4x4(
     -2, 1, 2, 3,
@@ -281,12 +271,7 @@ test("multiplying a matrix by its inverse", assert=>{
   );
   let invB = B.inversed();
   let prod = invB.mul(B);
-  let identity = M4x4(
-    1.0, 0.0, 0.0, 0.0,
-    0.0, 1.0, 0.0, 0.0,
-    0.0, 0.0, 1.0, 0.0,
-    0.0, 0.0, 0.0, 1.0,
-  );
+  let identity = M4x4.identity();
   assert.ok(matricesEqual(prod, identity));
 })
 test("inverse of transpose vs transpose of inverse", assert=>{

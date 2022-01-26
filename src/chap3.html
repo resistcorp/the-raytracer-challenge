@@ -1,0 +1,18 @@
+<html>
+<head>
+  <title>The Raytracer Challenge -- chaps 1-2</title>
+  <script type="module">
+    import {play} from "./chapter3and4.js";
+    window.draw = play;
+    play();
+  </script>
+</head>
+<body>
+  <canvas id="cnv" width="500" height="500"></canvas>
+  <form>
+    <label for="width">width<input name="width" id="width" type="number" step="1" max="1000" min="10" value="700" /></label>
+    <label for="height">height<input name="height" id="height" type="number" step="1" max="1000" min="10" value="350" /></label>
+  </form>
+  <button onclick="window.draw()">Draw</button>
+</body>
+</html>
