@@ -1,5 +1,7 @@
-import { M4x4, translation } from "../src/matrices.js";
-import { ray } from "../src/Rays.js";
+import { hit, intersect, intersection, intersections } from "../src/lib.js";
+import { M4x4, matricesEqual, scaling, translation } from "../src/matrices.js";
+import { sphere } from "../src/primitives.js";
+import { ray } from "../src/rays.js";
 import { point, vector } from "../src/tuples.js";
 import test from "./test.js";
 test("creating and querying a ray", assert => {
@@ -11,12 +13,12 @@ test("creating and querying a ray", assert => {
 });
 
 test("computing a point from a distance", assert => {
-  const ray = ray(point(2, 3, 4), vector(1, 0, 0));
+  const r = ray(point(2, 3, 4), vector(1, 0, 0));
 
-  assert.tupleEqual(ray.at(0.0), point(2, 3, 4));
-  assert.tupleEqual(ray.at(1.0), point(3, 3, 4));
-  assert.tupleEqual(ray.at(-1.0), point(1, 3, 4));
-  assert.tupleEqual(ray.at(2.5), point(4.5, 3, 4));
+  assert.tupleEqual(r.at(0.0), point(2, 3, 4));
+  assert.tupleEqual(r.at(1.0), point(3, 3, 4));
+  assert.tupleEqual(r.at(-1.0), point(1, 3, 4));
+  assert.tupleEqual(r.at(2.5), point(4.5, 3, 4));
 });
 
 test("a ray intersects a sphere at two points", assert => {
@@ -24,7 +26,7 @@ test("a ray intersects a sphere at two points", assert => {
   const s = sphere();
   const xs = intersect(s, r);
 
-  assert.equals(xs, [4.0, 6.0]);
+  assert.arrayEqual(extractTValues(xs), [4.0, 6.0]);
 });
 
 test("a ray intersects a sphere at a tangent", assert => {
@@ -32,15 +34,19 @@ test("a ray intersects a sphere at a tangent", assert => {
   const s = sphere();
   const xs = intersect(s, r);
 
-  assert.equals(xs, [5.0, 5.0]);
+  assert.arrayEqual(extractTValues(xs), [5.0, 5.0]);
 });
 
+function extractTValues(xs){
+  return xs.map(intersection => intersection.t);
+}
+
 test("a ray misses a sphere", assert => {
-  const r = ray(point(0, 1, -5), vector(0, 0, 1));
+  const r = ray(point(0, 2, -5), vector(0, 0, 1));
   const s = sphere();
   const xs = intersect(s, r);
 
-  assert.equals(xs, []);
+  assert.arrayEqual(extractTValues(xs), []);
 });
 
 test("a ray originates inside a sphere", assert => {
@@ -48,7 +54,7 @@ test("a ray originates inside a sphere", assert => {
   const s = sphere();
   const xs = intersect(s, r);
 
-  assert.equals(xs, [-1.0, 1.0]);
+  assert.arrayEqual(extractTValues(xs), [-1.0, 1.0]);
 });
 
 test("a ray is behind a sphere", assert => {
@@ -56,13 +62,13 @@ test("a ray is behind a sphere", assert => {
   const s = sphere();
   const xs = intersect(s, r);
 
-  assert.equals(xs, [-6.0, 4.0]);
+  assert.arrayEqual(extractTValues(xs), [-6.0, -4.0]);
 });
 
 test("an intersection encapsulates a t and an object", assert => {
   const s = sphere();
   const i = intersection(3.5, s);
-  assert.equals(i.t, 3.5);
+  assert.equal(i.t, 3.5);
   assert.ok(i.object === s);
 });
 
@@ -71,8 +77,8 @@ test("aggregating intersections", assert => {
   const i1 = intersection(1.0, s);
   const i2 = intersection(2.0, s);
   const xs = intersections(i1, i2);
-  assert.equals(xs[0].t, 1.0);
-  assert.equals(xs[1].t, 2.0);
+  assert.equal(xs[0].t, 1.0);
+  assert.equal(xs[1].t, 2.0);
 });
 
 //will have to change other tests here (change the return of intersect)
@@ -92,7 +98,7 @@ test("the hit, when all intersections have positive t", assert => {
   const xs = intersections(i1, i2);
   
   const i = hit(xs);
-  assert.ok(i === i1);
+  assert.equal(i, i1);
 });
 
 test("the hit, when some intersections have negative t", assert => {
@@ -112,7 +118,7 @@ test("the hit, when all intersections have negative t", assert => {
   const xs = intersections(i1, i2);
   
   const i = hit(xs);
-  assert.null(i);
+  assert.undef(i);
 });
 
 test("the hit is always the lowest nonnegative intersection", assert => {
@@ -147,7 +153,7 @@ test("scaling a ray", assert => {
 
 test("a sphere's default transformation", assert => {
   const s = sphere();
-  assert.ok(matricesEqual(s.transform, M4x4.identity()));
+  assert.matrixEqual(s.transform, M4x4.identity());
 });
 
 test("changing a sphere's transformation", assert => {
@@ -162,7 +168,7 @@ test("intersecting a scaled sphere with a ray", assert => {
   const s = sphere(scaling(2, 2, 2));
   const xs = intersect(s, r);
 
-  assert.equals(xs, [3.0, 7.0]);
+  assert.arrayEqual(extractTValues(xs), [3.0, 7.0]);
 });
 
 test("intersecting a translated sphere with a ray", assert => {
@@ -170,5 +176,5 @@ test("intersecting a translated sphere with a ray", assert => {
   const s = sphere(translation(5, 0, 0));
   const xs = intersect(s, r);
 
-  assert.equals(xs, []);
+  assert.arrayEqual(xs, []);
 });
