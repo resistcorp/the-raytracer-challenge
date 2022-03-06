@@ -1,16 +1,8 @@
 import {point} from "./tuples.js";
 import {rotation_z, translation} from "./matrices.js";
 import Canvas from "./canvas.js";
+import { drawCanvas } from "./htmlLib.js";
 
-function isNode(){
-  return !isHTML();
-}
-function isHTML(){
-  try{
-    return window && document;
-  }catch(e){}
-  return false;
-}
 export function play(){
   const $ = id => + document.getElementById(id).value;
 
@@ -28,15 +20,7 @@ export function play(){
     p = center.transform(p);
     Canvas.writePixel(cnv, p.x, p.y, Canvas.makeColor(0.0, 1.0, 0.0, 1.0));
   }
-  let destCnv = document.getElementById("cnv");
-  let { width, height } = cnv;
-  destCnv.width = width;
-  destCnv.height = height;
-  let ctx = destCnv.getContext("2d");
-  // let imageData = ctx.getImageData(0, 0, width, height);
-  let imageData = new ImageData(width, height);
-  Canvas.populateImageData(cnv, imageData.data);
-  ctx.putImageData(imageData, 0, 0);
+  drawCanvas(cnv);
 
   return false;
 }
