@@ -16,7 +16,7 @@ export function make(prototype, properties){
   return Object.assign(Object.create(prototype), properties);
 }
 
-export function intersect(prim, ray){
+export function intersect(ray, prim){
   switch(prim.type){
     case "sphere" :
       return intersectSphere(ray, prim);

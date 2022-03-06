@@ -24,7 +24,7 @@ test("computing a point from a distance", assert => {
 test("a ray intersects a sphere at two points", assert => {
   const r = ray(point(0, 0, -5), vector(0, 0, 1));
   const s = sphere();
-  const xs = intersect(s, r);
+  const xs = intersect(r, s);
 
   assert.arrayEqual(extractTValues(xs), [4.0, 6.0]);
 });
@@ -32,7 +32,7 @@ test("a ray intersects a sphere at two points", assert => {
 test("a ray intersects a sphere at a tangent", assert => {
   const r = ray(point(0, 1, -5), vector(0, 0, 1));
   const s = sphere();
-  const xs = intersect(s, r);
+  const xs = intersect(r, s);
 
   assert.arrayEqual(extractTValues(xs), [5.0, 5.0]);
 });
@@ -44,7 +44,7 @@ function extractTValues(xs){
 test("a ray misses a sphere", assert => {
   const r = ray(point(0, 2, -5), vector(0, 0, 1));
   const s = sphere();
-  const xs = intersect(s, r);
+  const xs = intersect(r, s);
 
   assert.arrayEqual(extractTValues(xs), []);
 });
@@ -52,7 +52,7 @@ test("a ray misses a sphere", assert => {
 test("a ray originates inside a sphere", assert => {
   const r = ray(point(0, 0, 0), vector(0, 0, 1));
   const s = sphere();
-  const xs = intersect(s, r);
+  const xs = intersect(r, s);
 
   assert.arrayEqual(extractTValues(xs), [-1.0, 1.0]);
 });
@@ -60,7 +60,7 @@ test("a ray originates inside a sphere", assert => {
 test("a ray is behind a sphere", assert => {
   const r = ray(point(0, 0, 5), vector(0, 0, 1));
   const s = sphere();
-  const xs = intersect(s, r);
+  const xs = intersect(r, s);
 
   assert.arrayEqual(extractTValues(xs), [-6.0, -4.0]);
 });
@@ -85,7 +85,7 @@ test("aggregating intersections", assert => {
 test("intersects keeps objects", assert => {
   const r = ray(point(0, 0, -5), vector(0, 0, 1));
   const s = sphere();
-  const xs = intersect(s, r);
+  const xs = intersect(r, s);
 
   assert.ok(xs[0].object === s);
   assert.ok(xs[1].object === s);
@@ -166,7 +166,7 @@ test("changing a sphere's transformation", assert => {
 test("intersecting a scaled sphere with a ray", assert => {
   const r = ray(point(0, 0, -5), vector(0, 0, 1));
   const s = sphere(scaling(2, 2, 2));
-  const xs = intersect(s, r);
+  const xs = intersect(r, s);
 
   assert.arrayEqual(extractTValues(xs), [3.0, 7.0]);
 });
@@ -174,7 +174,7 @@ test("intersecting a scaled sphere with a ray", assert => {
 test("intersecting a translated sphere with a ray", assert => {
   const r = ray(point(0, 0, -5), vector(0, 0, 1));
   const s = sphere(translation(5, 0, 0));
-  const xs = intersect(s, r);
+  const xs = intersect(r, s);
 
   assert.arrayEqual(xs, []);
 });
