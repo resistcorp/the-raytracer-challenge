@@ -6,6 +6,7 @@ import "./canvas.test.js"
 import "./tuples.test.js"
 import "./matrices.test.js"
 import "./transforms.test.js"
+import "./ray-sphere.test.js"
 
 const assert = {
   ko : (falsy, msg) => originalAssert.ok(!falsy, msg),

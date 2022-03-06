@@ -1,16 +1,17 @@
 import { epsilonEquals } from "./lib.js";
-const Tuples = { 
-  // factories
-  tuple : function(x, y, z, w) {
-    return { x, y, z, w };
-  },
-  point : function(x, y, z) {
-    return { x, y, z, w: 1.0 };
-  },
-  vector : function(x, y, z) {
-    return { x, y, z, w: 0.0 };
-  },
+export function tuple(x, y, z, w) {
+  return { x, y, z, w };
+}
+export function point(x, y, z) {
+  return { x, y, z, w: 1.0 };
+}
+export function vector(x, y, z) {
+  return { x, y, z, w: 0.0 };
+}
 
+const Tuples = { 
+  tuple,point,vector,
+  // factories
   //maths on tuples
   add : function(a, b) {
     //FIXME: we may want to throw if adding two points
