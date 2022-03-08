@@ -1,6 +1,6 @@
 import {point} from "./tuples.js";
 import {rotation_z, translation} from "./matrices.js";
-import Canvas from "./canvas.js";
+import Canvas, { color } from "./canvas.js";
 import { drawCanvas } from "./htmlLib.js";
 
 export function play(){
@@ -18,7 +18,7 @@ export function play(){
     let R = rotation_z(i * Math.PI / 6);
     p = R.transform(p);
     p = center.transform(p);
-    Canvas.writePixel(cnv, p.x, p.y, Canvas.makeColor(0.0, 1.0, 0.0, 1.0));
+    Canvas.writePixel(cnv, p.x, p.y, color(0.0, 1.0, 0.0, 1.0));
   }
   drawCanvas(cnv);
 

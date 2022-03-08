@@ -1,5 +1,5 @@
 import Tuples from "../src/tuples.js";
-import Canvas from "../src/canvas.js";
+import Canvas, { color } from "../src/canvas.js";
 
 function isNode(){
   return !isHTML();
@@ -51,7 +51,7 @@ function computeCanvas(width, height, projectile, environment){
     tick(environment, projectile);
     let {x, y} = projectile.position;
     maxY = Math.max(maxY, y);
-    Canvas.writePixel(cnv, x|0, cnv.height-y|0, Canvas.makeColor(1.0, 0.0, 0.0, 1.0));
+    Canvas.writePixel(cnv, x|0, cnv.height-y|0, color(1.0, 0.0, 0.0, 1.0));
     turns++;
   }
   

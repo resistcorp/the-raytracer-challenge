@@ -10,13 +10,14 @@
 [ ] move assertion module to test lib. write it ourselves.
 [ ] run tests in browser too
 [ ] do chapters 6..16 of the book
-[ ] add hierarchical tests
 [ ] add routing, hot-reload and shutdown to server
 [ ] find a simple binding system for guis
 [ ] add ignoring tests / TODOS
 [ ] find reason why can't call draw() in html
-[ ] add deg2Rad and rad2Deg to lib
-
+[ ] profile hot paths : canvas, hit, etc...
+[ ] do an optim pass on canvas.
+[ ] parameterized tests
 
 next time : 
 [ ] chapter 6 : shaded sphere render
+[ ] add hierarchical tests

@@ -1,19 +1,20 @@
 import Tuples from "./tuples.js";
 import {clamp} from "./lib.js"
 
+export function createColor(red, green, blue, alpha = 0.0) {
+  return new Proxy(Tuples.tuple(red, green, blue, alpha), colorHandler);
+}
+
 const Canvas = {
-  makeColor: function (r, g, b, a = 0.0) {
-    return new Proxy(Tuples.tuple(r, g, b, a), colorHandler);
-  },
   mult: function (a, b) {
     //FIXME: only makes sense for colors
-    return Canvas.makeColor(a.r * b.r, a.g * b.g, a.b * b.b, a.a * b.a);
+    return createColor(a.r * b.r, a.g * b.g, a.b * b.b, a.a * b.a);
   },
 
   create: function (width, height) {
     let ret = Array(width * height);
     for (let i = 0; i < ret.length; i++)
-      ret[i] = Canvas.makeColor(.0, .0, .0);
+      ret[i] = createColor(.0, .0, .0);
     Object.assign(ret, { width, height });
     return ret;
   },
@@ -24,10 +25,10 @@ const Canvas = {
       return x + y * cnv.width
     return -1;
   },
-  writePixel: function (cnv, x, y, color) {
+  writePixel: function (cnv, x, y, c) {
     let idx = Canvas.rangeCheck(cnv, x, y);
     if( idx !== -1 )
-      cnv[idx] = Canvas.makeColor(color.r, color.g, color.b);
+      cnv[idx] = createColor(c.r, c.g, c.b);
   },
   pixelAt: function (cnv, x, y) {
     let idx = Canvas.rangeCheck(cnv, x, y);
@@ -37,15 +38,12 @@ const Canvas = {
   populateImageData: function (cnv, imageData, blendfunc = (src, dest) => 255) {
     //TODO:  blend modes
     cnv.forEach((color, i) => {
-      let channels = Canvas.colorToBytes(color);
+      let channels = colorToBytes(color);
       imageData[4*i + 0] = channels[0];
       imageData[4*i + 1] = channels[1];
       imageData[4*i + 2] = channels[2];
       imageData[4 * i + 3] = blendfunc(channels[3], imageData[4 * i + 3]) ;
     });
-  },
-  colorToBytes: function (color) {
-    return [color.red, color.green, color.blue, color.alpha].map(val => Math.round(0.49 + 255 * clamp(val, 0, 1)));
   },
   colorToPPM: function (color) {
     return [color.red, color.green, color.blue].map(val => "" + Math.round(0.49 + 255 * clamp(val, 0, 1)));
@@ -118,4 +116,9 @@ const colorHandler = {
   get: colorToVecGet,
   set: colorToVecSet
 }
+
+function colorToBytes(color) {
+  return [color.red, color.green, color.blue, color.alpha].map(val => Math.round(0.49 + 255 * clamp(val, 0, 1)));
+}
+
 export default Canvas;

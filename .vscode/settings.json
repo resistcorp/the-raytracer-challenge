@@ -4,5 +4,7 @@
   "nodeTdd.buildOnCreate": true,
   "nodeTdd.glob": "{src,tests}/**.{js,ts,jsx,tsx}",
   "editor.autoIndent": "advanced",
-  "editor.acceptSuggestionOnCommitCharacter": false
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "javascript.preferences.importModuleSpecifier": "project-relative",
+  "javascript.preferences.importModuleSpecifierEnding": "js"
 }

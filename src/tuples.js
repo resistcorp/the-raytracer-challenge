@@ -65,6 +65,10 @@ const Tuples = {
   },
   equivalent : function(a, b) {
     return epsilonEquals(a.x, b.x) && epsilonEquals(a.y, b.y) && epsilonEquals(a.z, b.z) && epsilonEquals(a.w, b.w);
+  },
+  reflect : function(vector, normal){
+    const dot = Tuples.dot(vector, normal);
+    return Tuples.sub(vector, Tuples.scale(normal, dot *2.0));
   }
 }
 

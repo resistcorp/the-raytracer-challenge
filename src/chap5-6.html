@@ -10,10 +10,13 @@
 <body>
   <canvas id="cnv" width="500" height="500"></canvas>
   <form>
-    <label for="width">width<input name="width" id="width" type="number" step="1" max="1000" min="10" value="700" /></label>
+    <label for="width">width<input name="width" id="width" type="number" step="1" max="1000" min="10" value="350" /></label>
     <label for="height">height<input name="height" id="height" type="number" step="1" max="1000" min="10" value="350" /></label>
+    <label for="distance">distance<input name="distance" id="distance" type="number" step="0.01" max="10" min="-10" value="0.5" /></label>
+    <br />
     <label for="orthogonal">orthogonal ?<input name="orthogonal" id="orthogonal" type="checkbox" checked /></label>
-    <label for="distance">distance<input name="distance" id="distance" type="number" step="0.01" max="10" min="-10" value="1" /></label>
+    <label for="shaded">shaded ?<input name="shaded" id="shaded" type="checkbox" checked /></label>
+    <label for="squished">squished ?<input name="squished" id="squished" type="checkbox" /></label>
   </form>
   <button onclick="window.draw()">Draw</button>
 </body>
