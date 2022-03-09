@@ -19,5 +19,8 @@
 [ ] parameterized tests
 
 next time : 
-[ ] chapter 6 : shaded sphere render
+[ ] chapter 7 : making a scene
 [ ] add hierarchical tests
+[ ] rename point() > createPoint(), vector() > createVector()
+[ ] make maths work in given tuples, instead of creating ones (↓ garbage)
+
