@@ -27,7 +27,6 @@ test("the normal on a sphere at a non-axial point point", assert => {
 
 test("the normal is a normalized vector", assert => {
   const s = sphere();
-  const sqrt3Over3 = Math.sqrt(3) / 3;
   const n = s.normalAt(point(1, 1, 1));
   
   //a bit useless if you ask me

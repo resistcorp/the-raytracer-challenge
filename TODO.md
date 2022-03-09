@@ -17,6 +17,8 @@
 [ ] profile hot paths : canvas, hit, etc...
 [ ] do an optim pass on canvas.
 [ ] parameterized tests
+[ ] progressive rendering in webworker
+[ ] scene edition
 
 next time : 
 [ ] chapter 7 : making a scene
