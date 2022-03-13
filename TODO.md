@@ -19,10 +19,11 @@
 [ ] parameterized tests
 [ ] progressive rendering in webworker
 [ ] scene edition
+[ ] multiple lights
 
 next time : 
 [ ] chapter 7 : making a scene
 [ ] add hierarchical tests
-[ ] rename point() > createPoint(), vector() > createVector()
+[X] rename point() > createPoint(), vector() > createVector()
 [ ] make maths work in given tuples, instead of creating ones (↓ garbage)
 

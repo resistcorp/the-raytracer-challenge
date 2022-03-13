@@ -2,15 +2,15 @@ import { epsilonEquals } from "./lib.js";
 export function tuple(x, y, z, w) {
   return { x, y, z, w };
 }
-export function point(x, y, z) {
+export function createPoint(x, y, z) {
   return { x, y, z, w: 1.0 };
 }
-export function vector(x, y, z) {
+export function createVector(x, y, z) {
   return { x, y, z, w: 0.0 };
 }
 
 const Tuples = { 
-  tuple,point,vector,
+  tuple,createPoint,createVector: createVector,
   // factories
   //maths on tuples
   add : function(a, b) {
@@ -39,7 +39,7 @@ const Tuples = {
          + a.w * b.w;
   },
   cross : function(a, b) {
-    return Tuples.vector(
+    return Tuples.createVector(
       a.y * b.z - a.z * b.y,
       a.z * b.x - a.x * b.z,
       a.x * b.y - a.y * b.x,

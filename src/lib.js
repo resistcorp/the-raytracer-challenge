@@ -1,4 +1,4 @@
-import Tuples, {point} from "./tuples.js";
+import Tuples, {createPoint} from "./tuples.js";
 
 export function clamp(value, min, max) {
   if (value < min)
@@ -44,7 +44,7 @@ export function hit(intersections){
 
 function intersectSphere(originalRay, s){
   const ray = originalRay.transformed(s.inverseTransform);
-  const sphToRay = Tuples.sub(ray.origin, point(0, 0, 0));
+  const sphToRay = Tuples.sub(ray.origin, createPoint(0, 0, 0));
 
   //this is actually ray.direction's magnitude squared. Should really draw this one
   const a = Tuples.dot(ray.direction, ray.direction);
@@ -59,3 +59,4 @@ function intersectSphere(originalRay, s){
   const t2 = (-b + Math.sqrt(discriminant)) / (2 * a);
   return intersections(intersection( t1, s ), intersection( t2, s ) );
 }
+

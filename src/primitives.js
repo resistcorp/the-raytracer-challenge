@@ -1,7 +1,7 @@
 import { make } from "./lib.js";
 import { material } from "./lighting.js";
 import { M4x4 } from "./matrices.js";
-import Tuples, { point, vector } from "./tuples.js";
+import Tuples, { createPoint, createVector } from "./tuples.js";
 
 export function sphere(matrix, mtl) {
   const ret = make(SPHERE);
@@ -25,7 +25,7 @@ const SPHERE  = {
   },
   normalAt(worldSpacePoint){
     const objectSpacePoint = this.inverseTransform.transform(worldSpacePoint);
-    const objectSpaceNormal = Tuples.normalize(Tuples.sub(objectSpacePoint, point(0, 0, 0)));
+    const objectSpaceNormal = Tuples.normalize(Tuples.sub(objectSpacePoint, createPoint(0, 0, 0)));
     const ret = this.transpose.transform(objectSpaceNormal);
     ret.w = 0.0;//some matrices may mess up the w, but this is easier than getting a submatrix
     return Tuples.normalize(ret);

@@ -1,28 +1,28 @@
 import { hit, intersect, intersection, intersections } from "../src/lib.js";
 import { M4x4, matricesEqual, scaling, translation } from "../src/matrices.js";
 import { sphere } from "../src/primitives.js";
-import { ray } from "../src/rays.js";
-import { point, vector } from "../src/tuples.js";
+import { createRay } from "../src/rays.js";
+import { createPoint, createVector } from "../src/tuples.js";
 import test from "./test.js";
 test("creating and querying a ray", assert => {
-  const origin = point(1, 2, 3);
-  const direction = vector(4, 5, 6);
-  const r = ray(origin, direction);
+  const origin = createPoint(1, 2, 3);
+  const direction = createVector(4, 5, 6);
+  const r = createRay(origin, direction);
   assert.tupleEqual(r.origin, origin);
   assert.tupleEqual(r.direction, direction);
 });
 
 test("computing a point from a distance", assert => {
-  const r = ray(point(2, 3, 4), vector(1, 0, 0));
+  const r = createRay(createPoint(2, 3, 4), createVector(1, 0, 0));
 
-  assert.tupleEqual(r.at(0.0), point(2, 3, 4));
-  assert.tupleEqual(r.at(1.0), point(3, 3, 4));
-  assert.tupleEqual(r.at(-1.0), point(1, 3, 4));
-  assert.tupleEqual(r.at(2.5), point(4.5, 3, 4));
+  assert.tupleEqual(r.at(0.0), createPoint(2, 3, 4));
+  assert.tupleEqual(r.at(1.0), createPoint(3, 3, 4));
+  assert.tupleEqual(r.at(-1.0), createPoint(1, 3, 4));
+  assert.tupleEqual(r.at(2.5), createPoint(4.5, 3, 4));
 });
 
 test("a ray intersects a sphere at two points", assert => {
-  const r = ray(point(0, 0, -5), vector(0, 0, 1));
+  const r = createRay(createPoint(0, 0, -5), createVector(0, 0, 1));
   const s = sphere();
   const xs = intersect(r, s);
 
@@ -30,7 +30,7 @@ test("a ray intersects a sphere at two points", assert => {
 });
 
 test("a ray intersects a sphere at a tangent", assert => {
-  const r = ray(point(0, 1, -5), vector(0, 0, 1));
+  const r = createRay(createPoint(0, 1, -5), createVector(0, 0, 1));
   const s = sphere();
   const xs = intersect(r, s);
 
@@ -42,7 +42,7 @@ function extractTValues(xs){
 }
 
 test("a ray misses a sphere", assert => {
-  const r = ray(point(0, 2, -5), vector(0, 0, 1));
+  const r = createRay(createPoint(0, 2, -5), createVector(0, 0, 1));
   const s = sphere();
   const xs = intersect(r, s);
 
@@ -50,7 +50,7 @@ test("a ray misses a sphere", assert => {
 });
 
 test("a ray originates inside a sphere", assert => {
-  const r = ray(point(0, 0, 0), vector(0, 0, 1));
+  const r = createRay(createPoint(0, 0, 0), createVector(0, 0, 1));
   const s = sphere();
   const xs = intersect(r, s);
 
@@ -58,7 +58,7 @@ test("a ray originates inside a sphere", assert => {
 });
 
 test("a ray is behind a sphere", assert => {
-  const r = ray(point(0, 0, 5), vector(0, 0, 1));
+  const r = createRay(createPoint(0, 0, 5), createVector(0, 0, 1));
   const s = sphere();
   const xs = intersect(r, s);
 
@@ -83,7 +83,7 @@ test("aggregating intersections", assert => {
 
 //will have to change other tests here (change the return of intersect)
 test("intersects keeps objects", assert => {
-  const r = ray(point(0, 0, -5), vector(0, 0, 1));
+  const r = createRay(createPoint(0, 0, -5), createVector(0, 0, 1));
   const s = sphere();
   const xs = intersect(r, s);
 
@@ -134,21 +134,21 @@ test("the hit is always the lowest nonnegative intersection", assert => {
 });
 
 test("translating a ray", assert => {
-  const r = ray(point(1, 2, 3), vector(0, 1, 0));
+  const r = createRay(createPoint(1, 2, 3), createVector(0, 1, 0));
   const m = translation(3, 4, 5);
   const r2 = r.transformed(m);
   
-  assert.tupleEqual(r2.origin, point(4, 6, 8));
-  assert.tupleEqual(r2.direction, vector(0, 1, 0));
+  assert.tupleEqual(r2.origin, createPoint(4, 6, 8));
+  assert.tupleEqual(r2.direction, createVector(0, 1, 0));
 });
 
 test("scaling a ray", assert => {
-  const r = ray(point(1, 2, 3), vector(0, 1, 0));
+  const r = createRay(createPoint(1, 2, 3), createVector(0, 1, 0));
   const m = scaling(2, 3, 4);
   const r2 = r.transformed(m);
   
-  assert.tupleEqual(r2.origin, point(2, 6, 12));
-  assert.tupleEqual(r2.direction, vector(0, 3, 0));
+  assert.tupleEqual(r2.origin, createPoint(2, 6, 12));
+  assert.tupleEqual(r2.direction, createVector(0, 3, 0));
 });
 
 test("a sphere's default transformation", assert => {
@@ -164,7 +164,7 @@ test("changing a sphere's transformation", assert => {
 });
 
 test("intersecting a scaled sphere with a ray", assert => {
-  const r = ray(point(0, 0, -5), vector(0, 0, 1));
+  const r = createRay(createPoint(0, 0, -5), createVector(0, 0, 1));
   const s = sphere(scaling(2, 2, 2));
   const xs = intersect(r, s);
 
@@ -172,7 +172,7 @@ test("intersecting a scaled sphere with a ray", assert => {
 });
 
 test("intersecting a translated sphere with a ray", assert => {
-  const r = ray(point(0, 0, -5), vector(0, 0, 1));
+  const r = createRay(createPoint(0, 0, -5), createVector(0, 0, 1));
   const s = sphere(translation(5, 0, 0));
   const xs = intersect(r, s);
 

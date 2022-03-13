@@ -1,25 +1,26 @@
 import { M4x4, rotation_y, scaling, translation } from "../src/matrices.js";
-import { vector } from "../src/tuples.js";
+import { createPoint, createVector } from "../src/tuples.js";
 import { defaultWorld } from "./scene.test.js";
+import test from "./test.js";
 
 test("the default lookat matrix", assert => {
-  const mtx = lookAt(point(0, 0, 0), point(0, 0, -1), vector(0, 1, 0));
+  const mtx = lookAt(createPoint(0, 0, 0), createPoint(0, 0, -1), createVector(0, 1, 0));
   assert.matrixEqual(mtx, M4x4.identity());
 });
 
 test("a view matrix looking in positive z direction", assert => {
-  const mtx = lookAt(point(0, 0, 0), point(0, 0, 1), vector(0, 1, 0));
+  const mtx = lookAt(createPoint(0, 0, 0), createPoint(0, 0, 1), createVector(0, 1, 0));
   assert.matrixEqual(mtx, scaling(-1, 0, -1));
   assert.matrixEqual(mtx, rotation_y(Math.PI));
 });
 
 test("the view transformation moves the world", assert => {
-  const mtx = lookAt(point(0, 0, 8), point(0, 0, 0), vector(0, 1, 0));
+  const mtx = lookAt(createPoint(0, 0, 8), createPoint(0, 0, 0), createVector(0, 1, 0));
   assert.matrixEqual(mtx, translation(0, 0, -8));
 });
 
 test("the view transformation moves the world", assert => {
-  const mtx = lookAt(point(1, 3, 2), point(4, -2, 8), vector(1, 1, 0));
+  const mtx = lookAt(createPoint(1, 3, 2), createPoint(4, -2, 8), createVector(1, 1, 0));
   assert.matrixEqual(mtx, M4x4(
     -.50709, -.50709, .67612, -2.36643,
     .76772,  .60609,  .12122, -2.82843,

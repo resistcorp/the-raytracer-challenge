@@ -8,6 +8,8 @@ import "./matrices.test.js"
 import "./transforms.test.js"
 import "./ray-sphere.test.js"
 import "./lighting.test.js"
+import "./scene.test.js"
+import "./view.test.js"
 import { matricesEqual } from "../src/matrices.js";
 
 const assert = {

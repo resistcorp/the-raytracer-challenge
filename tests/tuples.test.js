@@ -1,7 +1,7 @@
 import Tuples from "../src/tuples.js";
 import {test} from "./test.js"
 
-let {tuple, point, vector, isPoint, isVector} = Tuples;
+let {tuple, createPoint, createVector, isPoint, isVector} = Tuples;
 
 test("a tuple with a w of 1.0 is a point and not a vector", assert => {
   let aPoint = tuple(4.3, -4.2, 3.1, 1.0);
@@ -14,19 +14,19 @@ test("a tuple with a w of 0.0 is not a point but a vector", assert => {
   assert.ok(isVector(aVector));
 });
 test("point() creates tuples with w=1.0", assert => {
-  let aPoint = point(4.3, -4.2, 3.1);
+  let aPoint = createPoint(4.3, -4.2, 3.1);
   let aTuple = tuple(4.3, -4.2, 3.1, 1.0);
   //console.log(aPoint, aTuple, aPoint == aTuple, aPoint === aTuple);
   assert.tupleEqual(aPoint, aTuple);
 });
 test("vector() creates tuples with w=0.0", assert => {
-  let aVector = vector(4.3, -4.2, 3.1);
+  let aVector = createVector(4.3, -4.2, 3.1);
   let aTuple = tuple(4.3, -4.2, 3.1, 0.0);
   assert.tupleEqual(aVector, aTuple);
 });
 test("floating point precision", assert => {
-  let imprecise = vector(0.2 + 0.1, -0.2 - 0.1, 0.0);
-  let precise = vector(0.3, -0.3, 0.0);
+  let imprecise = createVector(0.2 + 0.1, -0.2 - 0.1, 0.0);
+  let precise = createVector(0.3, -0.3, 0.0);
   assert.notEqual(0.2 + 0.1, 0.3);
   assert.epsilonEqual(0.2 + 0.1, 0.3);
   assert.tupleEqual(imprecise, precise);
@@ -39,30 +39,30 @@ test("adding two tuples", assert => {
   assert.tupleEqual(Tuples.add(a1, a2), expectation);
 });
 test("substracting two points", assert => {
-  let p1 = point(3.0, 2.0, 1.0);
-  let p2 = point(5.0, 6.0, 7.0);
-  let expectation = vector(-2.0, -4.0, -6.0);
+  let p1 = createPoint(3.0, 2.0, 1.0);
+  let p2 = createPoint(5.0, 6.0, 7.0);
+  let expectation = createVector(-2.0, -4.0, -6.0);
 
   assert.tupleEqual(Tuples.sub(p1, p2), expectation);
 });
 test("substracting a vector from a point", assert => {
-  let p = point(3.0, 2.0, 1.0);
-  let v = vector(5.0, 6.0, 7.0);
-  let expectation = point(-2.0, -4.0, -6.0);
+  let p = createPoint(3.0, 2.0, 1.0);
+  let v = createVector(5.0, 6.0, 7.0);
+  let expectation = createPoint(-2.0, -4.0, -6.0);
 
   assert.tupleEqual(Tuples.sub(p, v), expectation);
 });
 test("substracting two vectors", assert => {
-  let v1 = vector(3.0, 2.0, 1.0);
-  let v2 = vector(5.0, 6.0, 7.0);
-  let expectation = vector(-2.0, -4.0, -6.0);
+  let v1 = createVector(3.0, 2.0, 1.0);
+  let v2 = createVector(5.0, 6.0, 7.0);
+  let expectation = createVector(-2.0, -4.0, -6.0);
 
   assert.tupleEqual(Tuples.sub(v1, v2), expectation);
 });
 test("substracting a vector from the zero vector", assert => {
-  let zero = vector(0.0, 0.0, 0.0);
-  let v = vector(1.0, -2.0, 3.0);
-  let expectation = vector(-1.0, 2.0, -3.0);
+  let zero = createVector(0.0, 0.0, 0.0);
+  let v = createVector(1.0, -2.0, 3.0);
+  let expectation = createVector(-1.0, 2.0, -3.0);
 
   assert.tupleEqual(Tuples.sub(zero, v), expectation);
 });
@@ -91,49 +91,49 @@ test("dividing a tuple by a scalar", assert => {
   assert.tupleEqual(Tuples.divide(t, 2), expectation);
 });
 test("computing the magnitude of unit vectors", assert => {
-  let t = vector(1.0, 0.0, 0.0);
+  let t = createVector(1.0, 0.0, 0.0);
   let expectation = 1.0;
   
   assert.epsilonEqual(Tuples.magnitude(t), expectation);
-  t = vector(0.0, 1.0, 0.0);
+  t = createVector(0.0, 1.0, 0.0);
   assert.epsilonEqual(Tuples.magnitude(t), expectation);
-  t = vector(0.0, 0.0, 1.0);
+  t = createVector(0.0, 0.0, 1.0);
   assert.epsilonEqual(Tuples.magnitude(t), expectation);
   
 });
 test("computing the magnitude of vector (1,2,3)", assert => {
-  let t = vector(1.0, 2.0, 3.0);
+  let t = createVector(1.0, 2.0, 3.0);
   let expectation = Math.sqrt(14.0);
   assert.epsilonEqual(Tuples.magnitude(t), expectation);
 });
 test("computing the magnitude of vector (-1,-2,-3)", assert => {
-  let t = vector(-1.0, -2.0, -3.0);
+  let t = createVector(-1.0, -2.0, -3.0);
   let expectation = Math.sqrt(14.0);
   assert.epsilonEqual(Tuples.magnitude(t), expectation);
 });
 test("normalizing vector (4,0,0) gives vector(1,0,0)", assert => {
-  let t = vector(4.0, 0.0, 0.0);
-  let expectation = vector(1.0, 0.0, 0.0);
+  let t = createVector(4.0, 0.0, 0.0);
+  let expectation = createVector(1.0, 0.0, 0.0);
   assert.tupleEqual(Tuples.normalize(t), expectation);
 });
 test("normalizing vector (1,2,3)", assert => {
-  let t = vector(1.0, 2.0, 3.0);
-  let expectation = vector(0.26726, 0.53452, 0.80178);
+  let t = createVector(1.0, 2.0, 3.0);
+  let expectation = createVector(0.26726, 0.53452, 0.80178);
   //                                  1*sqrt14 2*sqrt14 3*sqrt14
   
   let actual = Tuples.normalize(t);
   assert.tupleEqual(actual, expectation);
 });
 test("The dot product of two vectors", assert => {
-  let v1 = vector(1.0, 2.0, 3.0);
-  let v2 = vector(2.0, 3.0, 4.0);
+  let v1 = createVector(1.0, 2.0, 3.0);
+  let v2 = createVector(2.0, 3.0, 4.0);
   
   assert.epsilonEqual(Tuples.dot(v1, v2), 20);
 });
 test("The cross product of two vectors", assert => {
-  let v1 = vector(1.0, 2.0, 3.0);
-  let v2 = vector(2.0, 3.0, 4.0);
-  let expectation = vector(-1.0, 2.0, -1.0);
+  let v1 = createVector(1.0, 2.0, 3.0);
+  let v2 = createVector(2.0, 3.0, 4.0);
+  let expectation = createVector(-1.0, 2.0, -1.0);
 
   assert.tupleEqual(Tuples.cross(v1, v2), expectation);
   assert.tupleEqual(Tuples.cross(v2, v1), Tuples.negate(expectation));
