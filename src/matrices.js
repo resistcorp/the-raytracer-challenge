@@ -164,7 +164,6 @@ const MatrixPrototype = {
       ret.push(this.get(row, col));
     return ret;
   },
-  
   invertible : function (){
     return this.determinant() !== 0;
   },

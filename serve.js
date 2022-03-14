@@ -19,8 +19,8 @@ const server = http.createServer(async (request, result) => {
       default :
         throw "unhandled extension : " + ext;
     }
-    result.writeHead(200)
     let payload = await fs.readFile("./" + parsedURL.path, "utf8", "r");
+    result.writeHead(200)
     result.end(payload);
   }catch(e){
     console.error(e);
