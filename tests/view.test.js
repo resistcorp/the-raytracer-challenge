@@ -1,3 +1,4 @@
+import Canvas, { createColor } from "../src/canvas.js";
 import { M4x4, rotation_y, scaling, translation } from "../src/matrices.js";
 import { createPoint, createVector } from "../src/tuples.js";
 import { createCamera, lookAt } from "../src/view.js";
@@ -71,5 +72,5 @@ test("rendering a world with a camera", assert => {
   camera.lookAt(createPoint(0, 0, -5), createPoint(0, 0, 0), createVector(0, 1, 0));
   const image = camera.render(world);
 
-  assert.tupleEqual(image.pixelAt(5, 5), makeColor(.38066, .47583, .2855));
+  assert.tupleEqual(Canvas.pixelAt(image, 5, 5), createColor(.38066, .47583, .2855));
 });

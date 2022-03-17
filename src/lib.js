@@ -7,7 +7,7 @@ export function clamp(value, min, max) {
     return max;
   return value;
 }
-const EPSILON = 1e-5;
+export const EPSILON = 1e-5;
 export function epsilonEquals(a, b) {
   return Math.abs(a - b) < EPSILON;
 }
