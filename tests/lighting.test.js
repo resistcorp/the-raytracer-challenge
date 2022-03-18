@@ -40,7 +40,6 @@ test("computing the normal on a translated sphere", assert => {
   assert.tupleEqual(n, createVector(0, 0.70711, -0.70711));
 });
 
-//TODO: come back to this test
 test("computing the normal on a transformed sphere", assert => {
   const s = sphere(scaling(1, 0.5, 1).mul(rotation_z(PI/5)));
   const n = s.normalAt(createPoint(0, SQRT2_OVER2, -Math.SQRT2/2));
@@ -101,7 +100,7 @@ test("a sphere can be assigned a reference to a material", assert => {
   m.ambient = 1.0;
   checkMaterial(assert, s.material, material({ambient:1.0}));
 });
-function checkMaterial(assert, m, {color, ambient, diffuse, specular, shininess}) {
+export function checkMaterial(assert, m, {color, ambient, diffuse, specular, shininess}) {
   assert.tupleEqual(m.color, color);
   assert.equal(m.ambient, ambient);
   assert.equal(m.diffuse, diffuse);
