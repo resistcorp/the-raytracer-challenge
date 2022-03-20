@@ -1,4 +1,4 @@
-import { make } from "./lib.js";
+import { EPSILON, make } from "./lib.js";
 import Tuples, {createPoint, createVector} from "./tuples.js";
 
 export function createRay(origin, direction) {
@@ -23,9 +23,11 @@ const PROTOTYPE = {
     let normalv = object.normalAt(point);
     const inside = Tuples.dot(eyev, normalv) < 0;
 
+    const overPoint = Tuples.add(point, Tuples.scale(normalv, EPSILON));
+
     if(inside)
       normalv = Tuples.negate(normalv);
 
-    return { t, point, eyev, normalv, inside, object };
+    return { t, point, overPoint, eyev, normalv, inside, object };
   }
 }

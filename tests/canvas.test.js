@@ -14,6 +14,15 @@ test("a color is a (red, green, blue) tuple", assert => {
   assert.equal(aColor.b, aColor.blue);
   assert.equal(aColor.a, aColor.alpha);
 });
+
+test("The default color with one component c is createColor(c, c, c) ", assert => {
+  assert.tupleEqual(createColor(0.1), createColor( 0.1, 0.1, 0.1));
+});
+
+test("The default color black ", assert => {
+  assert.tupleEqual(createColor(), createColor( 0.0, 0.0, 0.0 ));
+});
+
 test("mutating a color", assert => {
   let aColor = createColor(0.0,0.0,0.0);
   aColor.r = 1.0;
@@ -101,6 +110,7 @@ test("splitting long lines in ppm files", assert =>{
             "153 255 204 153 255 204 153 255 204 153 255 204 153"];
   assert.deepEqual(ppm.slice(3, 7), ex);
 });
+
 test("ppm files are terminated by a new line", assert =>{
   let cnv = Canvas.create(5, 3);
  

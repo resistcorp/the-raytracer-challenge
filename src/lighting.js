@@ -22,8 +22,10 @@ export function material(params){
 
 const BLACK = createColor(0, 0, 0);
 
-export function lighting(material, light, point, eyeVector, normalVector){
+export function lighting(material, light, point, eyeVector, normalVector, isInShadow = false, ambientMultiplier = 1.0){
   const actualColor = Canvas.mult(material.color, light.intensity);
+  if(material.debug)
+    debugger;
 
   //direction of lightSource
   const lightVector = Tuples.normalize(Tuples.sub(light.position, point));
@@ -33,7 +35,7 @@ export function lighting(material, light, point, eyeVector, normalVector){
   const lightDotNormal = Tuples.dot(lightVector, normalVector);
   let diffuse = BLACK;
   let specular = BLACK;
-  if(lightDotNormal >= 0){ // TODO check for exactly zero
+  if(!isInShadow && lightDotNormal >= 0){ // TODO check for exactly zero
     //diffuse contrib
     diffuse = Tuples.scale(actualColor, lightDotNormal * material.diffuse);
     const reflection = Tuples.reflect(Tuples.negate(lightVector), normalVector);
@@ -45,5 +47,5 @@ export function lighting(material, light, point, eyeVector, normalVector){
   }
   let result = Tuples.add(Tuples.add(ambient, diffuse), specular); //TODO add a chained add operation
   const {x, y, z} = result;
-  return createColor(x, y , z);
+  return createColor(x * ambientMultiplier, y * ambientMultiplier, z * ambientMultiplier);
 }

@@ -6,6 +6,7 @@ import { sphere } from "../src/primitives.js";
 import { createRay } from "../src/rays.js";
 import { createWorld } from "../src/scene.js";
 import { createPoint, createVector } from "../src/tuples.js";
+import { checkMaterial } from "./lighting.test.js";
 import test from "./test.js";
 
 test("creating a world", assert => {
@@ -14,15 +15,15 @@ test("creating a world", assert => {
   assert.arrayEqual(world.lights, []);
 });
 
-const defaultLight = pointLight(createPoint(-10, -10, -10), createColor(1, 1, 1));
-const s1 = sphere(M4x4.identity(), material({ color: createColor(0.8, 1.0, 0.6), diffuse: 0.7, specular: 0.2 }));
-const s2 = sphere(scaling(0.5, 0.5, 0.5));
+const defaultLight = () => pointLight(createPoint(-10, 10, -10), createColor(1, 1, 1));
+const s1 = () => sphere(M4x4.identity(), material({ color: createColor(0.8, 1.0, 0.6), diffuse: 0.7, specular: 0.2 }));
+const s2 = () => sphere(scaling(0.5, 0.5, 0.5));
 
 export function defaultWorld(){
   const theWorld = createWorld();
-  theWorld.addLight(defaultLight);
-  theWorld.addObject(s1);
-  theWorld.addObject(s2);
+  theWorld.addLight(defaultLight());
+  theWorld.addObject(s1());
+  theWorld.addObject(s2());
 
   return theWorld;
 }
@@ -30,8 +31,17 @@ export function defaultWorld(){
 test("the default world", assert => {
   const world = defaultWorld();
   
-  assert.arrayEqual(world.objects, [s1, s2]);
-  assert.arrayEqual(world.lights, [defaultLight]);
+  assert.arrayEqual(world.objects.length, 2);
+
+  const expected = [s1(), s2()];
+  for(let i = 0; i < 2; ++i){
+    assert.matrixEqual(world.objects[i].transform, expected[i].transform);
+    checkMaterial(assert, world.objects[i].material, expected[i].material);
+  }
+
+  assert.arrayEqual(world.lights.length, 1);
+  assert.tupleEqual(world.lights[0].position, defaultLight().position);
+  assert.tupleEqual(world.lights[0].intensity, defaultLight().intensity);
 });
 
 test("intersect a world with a ray", assert => {

@@ -1,15 +1,28 @@
 <html>
 <head>
-  <title>The Raytracer Challenge -- chapter 5 : ray/sphere intersection</title>
+  <title>The Raytracer Challenge -- chapter 7-8 : scene + shadows</title>
   <script type="module">
     import {drawScene, animateScene} from "./chapter7.js";
     window.drawScene = drawScene;
     window.animateScene = animateScene;
-    drawScene();
+    drawScene(false);
   </script>
+  <style>
+    canvas.lowres{
+      transform-origin: top left;
+      transform: scale(4);
+    }
+  </style>
 </head>
 <body>
-  <canvas id="cnv" width="400" height="250"></canvas>
+  <button onclick="window.drawScene(true)">Draw full res</button>
+  <button onclick="window.drawScene(false)">Draw low res</button>
+  <label for="ambientOcclusion">do ambient occlusion (badly)<input type="checkbox" id="ambientOcclusion" name="ambientOcclusion" /></label>
+  <br />
+
+  <div>
+    <canvas id="cnv" width="400" height="250"></canvas>
+  </div>
   <!-- <form>
     <label for="width">width<input name="width" id="width" type="number" step="1" max="1000" min="10" value="350" /></label>
     <label for="height">height<input name="height" id="height" type="number" step="1" max="1000" min="10" value="350" /></label>
@@ -19,9 +32,5 @@
     <label for="shaded">shaded ?<input name="shaded" id="shaded" type="checkbox" checked /></label>
     <label for="squished">squished ?<input name="squished" id="squished" type="checkbox" /></label>
   </form> -->
-  <br />
-  <button onclick="window.drawScene()">Draw a scene</button>
-  <button onclick="window.animateScene(true)">animate the scene</button>
-  <button onclick="window.animateScene(false)">stop animation</button>
 </body>
 </html>

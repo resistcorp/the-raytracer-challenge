@@ -10,9 +10,21 @@ import "./ray-sphere.test.js"
 import "./lighting.test.js"
 import "./scene.test.js"
 import "./view.test.js"
+import "./shadows.test.js"
 import { matricesEqual } from "../src/matrices.js";
 
 const assert = {
+  true : (shouldBeTrue, msg) => {
+    if(shouldBeTrue !== true)
+      throw(msg || `expected 'true' but got ${shouldBeTrue}`);
+  },
+  false : (shouldBeFalse, msg) => {
+    if (shouldBeFalse !== false)
+      throw (msg || `expected 'false' but got ${shouldBeTrue}`);
+  },
+  lessThan: (actual, expected, msg) => assert.true(actual < expected, msg || `${actual} isn't less than ${expected}`),
+  greaterThan: (actual, expected, msg) => assert.true(actual > expected, msg || `${actual} isn't greater than ${expected}`),
+  //FIXME: actually write truthy, falsy, equal, deepEquals, then get rid of assert dependency
   ko : (falsy, msg) => originalAssert.ok(!falsy, msg),
   undef: (undefVal, msg) => originalAssert.ok(undefVal === undefined, msg),
   null : (nullVal, msg) => originalAssert.ok(nullVal === null, msg),

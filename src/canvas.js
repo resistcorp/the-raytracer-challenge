@@ -1,7 +1,7 @@
 import Tuples from "./tuples.js";
 import {clamp} from "./lib.js"
 
-export function createColor(red, green, blue, alpha = 0.0) {
+export function createColor(red = 0.0, green = red, blue = red, alpha = 0.0) {
   return new Proxy(Tuples.tuple(red, green, blue, alpha), colorHandler);
 }
 
