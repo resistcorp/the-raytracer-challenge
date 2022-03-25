@@ -8,10 +8,20 @@ import { createPoint, createVector } from "./tuples.js";
 import { createCamera } from "./view.js";
 
 let isAnimating = false;
-export function drawScene(fullRes = false, timeInSeconds = 0){
+let nextSample = 0;
+const NUM_SAMPLES = 100;
+let samplesRender = Array(NUM_SAMPLES).map(_=>1000.0);
+let samplesPresent = Array(NUM_SAMPLES).map(_=>1000.0);
+const $ = document.getElementById.bind(document);
+
+let lastFrameTime = 0;
+let rotation = 0;
+
+export function drawScene(fullRes = false){
+  const startTime = performance.now();
   const world = createWorld();
-  world.tryAmbient = !!document.getElementById("ambientOcclusion").checked;
-  const usePlanes =  !!document.getElementById("usePlanes").checked;
+  world.tryAmbient = !!$("ambientOcclusion").checked;
+  const usePlanes =  !!$("usePlanes").checked;
 
   const mtl1 = material({color : createColor(0.1, 0.9, 0.2)});
   const mtl2 = material({color : createColor(0.6, 0.5, 0.2)});
@@ -35,32 +45,70 @@ export function drawScene(fullRes = false, timeInSeconds = 0){
   const dims = fullRes ? { w: 800, h: 500 } : { w: 200, h: 125 };
 
   const camera = createCamera(dims.w, dims.h, Math.PI/2);
-  let rotation = 0;
-  if(isAnimating){
-    let turnsPerSec = +document.getElementById("turnsPerSec").value;
-    if (isNaN(turnsPerSec)) {
-      turnsPerSec = 0.05;
-    }
-    rotation = Math.PI * 2 * timeInSeconds * turnsPerSec;
-  }
 
   const cameraPosition = rotation_y(rotation).transform(createPoint(-3, 2, 2.5));
   // const cameraPosition = createPoint(-3, 2, 1);
   camera.lookAt(cameraPosition, createPoint(0, 0, 1), createVector(0, 1, 0));
 
   const cnv = camera.render(world);
-  drawCanvas(cnv);
+  const renderTime = performance.now();
 
-  document.getElementById("cnv").classList = fullRes ? ["highRes"] : ["lowRes"];
+  drawCanvas(cnv);
+  const presentTime = performance.now();
+
+  $("cnv").classList = fullRes ? ["highRes"] : ["lowRes"];
+
+  samplesRender[nextSample % NUM_SAMPLES] = renderTime - startTime;
+  samplesPresent[nextSample % NUM_SAMPLES] = presentTime - renderTime;
+  nextSample ++;
 }
 
-
+export function resetCounters() {
+  nextSample = 0;
+}
 export function animateScene(shouldAnimate) {
   isAnimating = shouldAnimate;
 }
 function frame(time){
-  if(isAnimating)
-    drawScene(false, time / 1000.0)
+  if(isAnimating){
+    const timeInSeconds = (time - lastFrameTime) / 1000.0
+    if (isAnimating) {
+      let turnsPerSec = +$("turnsPerSec").value;
+      if (isNaN(turnsPerSec)) {
+        turnsPerSec = 0.05;
+      }
+      rotation += Math.PI * 2 * timeInSeconds * turnsPerSec;
+    }
+
+    drawScene(false, time / 1000.0);
+  }
+  lastFrameTime = time;
+
+  const samples = Math.min(nextSample, NUM_SAMPLES);
+  if(samples){
+    let renderTotal = 0;
+    let presentTotal = 0;
+
+    for(let i = 0; i < samples; i++){
+      renderTotal += samplesRender[i];
+      presentTotal += samplesPresent[i];
+    }
+
+    const avgRender = renderTotal / samples;
+    const avgPresent = presentTotal / samples;
+
+    const avg = (renderTotal + presentTotal) / samples;
+    const fps = 1000 / avg;
+
+    console.log("averages :", avg, avgRender, avgPresent, "fps", fps);
+
+    $("avg").innerText = avg.toFixed(0);
+    $("fps").innerText = fps.toFixed(2);
+  }else{
+    $("avg").innerText = "NaN";
+    $("fps").innerText = "NaN";
+  }
+  
   requestAnimationFrame(frame);
 }
 
