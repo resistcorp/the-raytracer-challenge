@@ -11,6 +11,7 @@ import "./lighting.test.js"
 import "./scene.test.js"
 import "./view.test.js"
 import "./shadows.test.js"
+import "./shapes.test.js"
 import { matricesEqual } from "../src/matrices.js";
 
 const assert = {
@@ -24,6 +25,10 @@ const assert = {
   },
   lessThan: (actual, expected, msg) => assert.true(actual < expected, msg || `${actual} isn't less than ${expected}`),
   greaterThan: (actual, expected, msg) => assert.true(actual > expected, msg || `${actual} isn't greater than ${expected}`),
+  empty(array, msg){
+    return assert.equal(array.length, 0, msg || `the given array isn't empty : ${array}`);
+  },
+
   //FIXME: actually write truthy, falsy, equal, deepEquals, then get rid of assert dependency
   ko : (falsy, msg) => originalAssert.ok(!falsy, msg),
   undef: (undefVal, msg) => originalAssert.ok(undefVal === undefined, msg),

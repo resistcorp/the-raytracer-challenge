@@ -1,6 +1,7 @@
 import test from "./test.js";
 import { translation, scaling, shearing, rotation_x, rotation_y, rotation_z} from "../src/matrices.js";
 import Tuples from "../src/tuples.js";
+import { PI_OVER_2, PI_OVER_4, SQRT_2_OVER_2 } from "../src/lib.js";
 let { createPoint, createVector, equivalent: tuplesEqual } = Tuples;
 
 // translations
@@ -44,12 +45,6 @@ test("reflection is scaling by a negative value", assert => {
   assert.ok(tuplesEqual(mtx.transform(v), createVector(-2, 3, 4)));
 });
 
-const π = Math.PI;
-const PI_OVER_2 = π/2;
-const PI_OVER_4 = π/4;
-
-const SQRT_2 = Math.sqrt(2);
-const SQRT_2_OVER_2 = SQRT_2/2;
 //rotations
 test("rotating a point around the x axis", assert => {
   let p = createPoint(0, 1, 0);

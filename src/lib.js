@@ -8,6 +8,15 @@ export function clamp(value, min, max) {
   return value;
 }
 export const EPSILON = 1e-5;
+
+export const PI = Math.PI;
+export const π = Math.PI;
+export const PI_OVER_2 = π / 2;
+export const PI_OVER_4 = π / 4;
+
+export const SQRT_2 = Math.sqrt(2);
+export const SQRT_2_OVER_2 = SQRT_2 / 2;
+
 export function epsilonEquals(a, b) {
   return Math.abs(a - b) < EPSILON;
 }
@@ -17,11 +26,8 @@ export function make(prototype, properties){
 }
 
 export function intersect(ray, prim){
-  switch(prim.type){
-    case "sphere" :
-      return intersectSphere(ray, prim);
-    default : throw(`unkown primitive type : ${prim} (${prim.type})`)
-  }
+  const localRay = ray.transformed(prim.inverseTransform);
+  return prim.localIntersect(localRay);
 }
 
 export function intersection(t, object){
@@ -42,21 +48,4 @@ export function hit(intersections){
   return best;
 }
 
-function intersectSphere(originalRay, s){
-  const ray = originalRay.transformed(s.inverseTransform);
-  const sphToRay = Tuples.sub(ray.origin, createPoint(0, 0, 0));
-
-  //this is actually ray.direction's magnitude squared. Should really draw this one
-  const a = Tuples.dot(ray.direction, ray.direction);
-  const b = 2.0 * Tuples.dot(ray.direction, sphToRay);
-  const c = Tuples.dot(sphToRay, sphToRay) -1.0;
-
-  const discriminant = b*b - 4 * a * c;
-  if(discriminant < 0)
-    return [];
-  
-  const t1 = (-b - Math.sqrt(discriminant)) / (2 * a);
-  const t2 = (-b + Math.sqrt(discriminant)) / (2 * a);
-  return intersections(intersection( t1, s ), intersection( t2, s ) );
-}
 

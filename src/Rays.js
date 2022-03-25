@@ -23,10 +23,10 @@ const PROTOTYPE = {
     let normalv = object.normalAt(point);
     const inside = Tuples.dot(eyev, normalv) < 0;
 
-    const overPoint = Tuples.add(point, Tuples.scale(normalv, EPSILON));
-
     if(inside)
       normalv = Tuples.negate(normalv);
+
+    const overPoint = Tuples.add(point, Tuples.scale(normalv, EPSILON));
 
     return { t, point, overPoint, eyev, normalv, inside, object };
   }

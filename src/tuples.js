@@ -1,11 +1,11 @@
 import { epsilonEquals } from "./lib.js";
-export function tuple(x, y, z, w) {
+export function tuple(x = 0, y = 0, z = 0, w = 0) {
   return { x, y, z, w };
 }
-export function createPoint(x, y, z) {
+export function createPoint(x = 0, y = 0, z = 0) {
   return { x, y, z, w: 1.0 };
 }
-export function createVector(x, y, z) {
+export function createVector(x = 0, y = 0, z = 0) {
   return { x, y, z, w: 0.0 };
 }
 

@@ -1,7 +1,9 @@
-import { intersect } from "../src/lib.js";
-import { M4x4, scaling, translation } from "../src/matrices.js";
+import { intersect, PI, SQRT_2, SQRT_2_OVER_2 } from "../src/lib.js";
+import { material } from "../src/lighting.js";
+import { M4x4, rotation_z, scaling, translation } from "../src/matrices.js";
+import { plane, sphere, testShape } from "../src/primitives.js";
 import { createRay } from "../src/rays.js";
-import { createVector } from "../src/tuples.js";
+import { createPoint, createVector } from "../src/tuples.js";
 import { checkMaterial } from "./lighting.test.js";
 import test from "./test.js";
 
@@ -23,13 +25,13 @@ test("assigning a transformation", assert => {
 
 test("the default material", assert => {
   const s = testShape();
-  checkMaterial(s.material, material());
+  checkMaterial(assert, s.material, material());
 });
 
 test("assigning a material", assert => {
   const s = testShape();
   s.setMaterial(material({ambient : 1.0}));
-  checkMaterial(s.material, material({ambient : 1.0}));
+  checkMaterial(assert, s.material, material({ambient : 1.0}));
 });
 
 test("Intersecting a scaled shape with a ray", assert => {
@@ -40,29 +42,25 @@ test("Intersecting a scaled shape with a ray", assert => {
     actualRay = localRay;
     return [];
   };
-  ray.intersect(s);//testing that localIntersect is called with a transformed ray
-  assert.tupleEqual(actualRay.origin, createPoint(0, 0, 2.5));
-  assert.tupleEqual(actualRay.direction, createPoint(0, 0, 0.5));
+  intersect(ray, s);//testing that localIntersect is called with a transformed ray
+  assert.tupleEqual(actualRay.origin, createPoint(0, 0, -2.5));
+  assert.tupleEqual(actualRay.direction, createVector(0, 0, 0.5));
 });
 
 test("Intersecting a translated shape with a ray", assert => {
   const ray = createRay(createPoint(0, 0, -5), createVector(0, 0, 1));
-
-  //FIXME: return this in setTransform and setMaterial
   const s = testShape().setTransform(translation(5, 0, 0));
   let actualRay;
   s.localIntersect = localRay => {
     actualRay = localRay;
     return [];
   };
-  ray.intersect(s);//testing that localIntersect is called with a transformed ray
+  intersect(ray, s);//testing that localIntersect is called with a transformed ray
   assert.tupleEqual(actualRay.origin, createPoint(-5, 0, -5));
-  assert.tupleEqual(actualRay.direction, createPoint(0, 0, 1));
+  assert.tupleEqual(actualRay.direction, createVector(0, 0, 1));
 });
 
 test("Computing the normal on a translated shape", assert => {
-//FIXME: shapes need a localNormalAt function, normalAt does the transforming and normalization
-//NOTE : test is the exact same as for spheres, so borrow that implementation
   const s = testShape(translation(0, 1, 0));
   const n = s.normalAt(createPoint(0, 1.70711, -0.70711));
 
@@ -71,18 +69,22 @@ test("Computing the normal on a translated shape", assert => {
 
 test("computing the normal on a transformed shape", assert => {
   const s = testShape(scaling(1, 0.5, 1).mul(rotation_z(PI / 5)));
-  const n = s.normalAt(createPoint(0, SQRT2_OVER2, -Math.SQRT2 / 2));
+  const n = s.normalAt(createPoint(0, SQRT_2_OVER_2, -SQRT_2 / 2));
 
   assert.tupleEqual(n, createVector(0, 0.97014, -0.24254));
 });
 
 test("a sphere is a shape", assert => {
-  assert.true(sphere().isShape);
+  const theSphere = sphere();
+  assert.true(theSphere.isShape);
+  assert.equal(theSphere.type, "sphere");
 });
 
 test("a plane is also a shape", assert => {
   //but is superman a shape too?
-  assert.true(plane().isShape);
+  const thePlane = plane();
+  assert.true(thePlane.isShape);
+  assert.equal(thePlane.type, "plane");
 });
 
 test("The normal of a plane is constant everywhere", assert => {
@@ -98,32 +100,34 @@ test("intersecting with a ray parallel to the plane", assert => {
   const ray = createRay(createPoint(0, 10, 0), createVector(0, 0, 1));
   
   //FIXME: create assert.empty
-  assert.empty(ray.intersect(s));
+  assert.empty(intersect(ray, s));
 });
 
 test("intersecting with a ray coplanar to the plane", assert => {
   const s = plane();
   const ray = createRay(createPoint(0, 0, 0), createVector(0, 0, 1));
   
-  assert.empty(ray.intersect(s));
+  assert.empty(intersect(ray, s));
 });
 
 test("intersecting with a plane from above", assert => {
   const s = plane();
-  const ray = createRay(createPoint(0, 1, 0), createVector(0, -1));
+  const ray = createRay(createPoint(0, 1, 0), createVector(0, -1, 0));
   
-  const xs = ray.intersect(s);
+  const xs = intersect(ray, s);
   assert.equal(xs.length, 1);
   assert.equal(xs[0].t, 1);
   assert.equal(xs[0].object, s);
 });
 
-test("intersecting with a plane from above", assert => {
+test("intersecting with a plane from below", assert => {
   const s = plane();
   const ray = createRay(createPoint(0, -1, 0), createVector(0, 1));
   
-  const xs = ray.intersect(s);
+  const xs = intersect(ray, s);
   assert.equal(xs.length, 1);
   assert.equal(xs[0].t, 1);
   assert.equal(xs[0].object, s);
 });
+/*
+//*/

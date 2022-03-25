@@ -13,6 +13,13 @@ test("a tuple with a w of 0.0 is not a point but a vector", assert => {
   assert.ok(!isPoint(aVector));
   assert.ok(isVector(aVector));
 });
+
+test("the default values of tuples", assert => {
+  assert.tupleEqual(createPoint(), createPoint(0, 0, 0));
+  assert.tupleEqual(createVector(), createVector(0, 0, 0));
+  assert.false(Tuples.equivalent(createVector(), createPoint()), "default point shouldn't be the same as default vector");
+});
+
 test("point() creates tuples with w=1.0", assert => {
   let aPoint = createPoint(4.3, -4.2, 3.1);
   let aTuple = tuple(4.3, -4.2, 3.1, 1.0);
