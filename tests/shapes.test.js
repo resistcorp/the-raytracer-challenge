@@ -129,5 +129,3 @@ test("intersecting with a plane from below", assert => {
   assert.equal(xs[0].t, 1);
   assert.equal(xs[0].object, s);
 });
-/*
-//*/
